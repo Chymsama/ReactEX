@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardImg, CardText, CardBody, CardTitle, ListGroup, ListGroupItem } from 'reactstrap';
 
 function DishDetail({ dish }) {
-    if (dish === null) {
+    if (!dish) {
         return <div></div>;
     }
 
@@ -14,7 +14,8 @@ function DishDetail({ dish }) {
         const commentList = comments.map((comment) => (
             <ListGroupItem key={comment.id}>
                 <p>{comment.comment}</p>
-                <p>-- {comment.author}, {new Date(comment.date).toDateString()}</p>
+                <p>-- {comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}
+                </p>
             </ListGroupItem>
         ));
 

@@ -4,6 +4,10 @@ import { Navbar, NavbarBrand } from 'reactstrap';
 import Menu from './Component/MenuComponent';
 import { useState } from "react";
 import { DISHES } from './shared/dishes';
+import Main from './Component/MainComponent';
+
+
+
 function App() {
   const [dishes] = useState(DISHES);
 
@@ -14,4 +18,12 @@ function App() {
   );
 }
 
-export default App;
+
+function MainComponent() {
+  return (
+    <div className="App">
+      <Main />
+    </div>
+  );
+}
+export default MainComponent;
