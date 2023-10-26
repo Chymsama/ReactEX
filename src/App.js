@@ -6,26 +6,22 @@ import { useState } from "react";
 import { DISHES } from './shared/dishes';
 import Main from './Component/MainComponent';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { ConfigureStore } from './redux/configureStore';
 
 
-function App() {
-  const [dishes] = useState(DISHES);
-
-  return (
-    <div className='AppQuang'>
-      <Menu dishes={dishes} />
-    </div>
-  );
-}
-
+const store = ConfigureStore()
 
 function MainComponent() {
   return (
-    <BrowserRouter>
-      <div className="App">
-        <Main />
-      </div>
-    </BrowserRouter>
+    <Provider store={store} >
+
+      <BrowserRouter>
+        <div className="App">
+          <Main />
+        </div>
+      </BrowserRouter>
+    </Provider>
   );
 }
 export default MainComponent;

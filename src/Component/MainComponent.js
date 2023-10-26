@@ -12,52 +12,102 @@ import { COMMENTS } from '../shared/comments';
 import { PROMOTIONS } from '../shared/promotions';
 import { LEADERS } from '../shared/leaders';
 import About from './AboutComponent';
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { useSelector, useDispatch } from 'react-redux';
+
+
+const mapStateToProps = (state) => {
+    return {
+        dishes: state.dishes,
+        comments: state.comments,
+        promotions: state.promotions,
+        leaders: state.leaders,
+    };
+};
 
 function Main() {
-    const [dishes] = useState(DISHES);
-    const [comments] = useState(COMMENTS);
-    const [promotions] = useState(PROMOTIONS);
-    const [leaders] = useState(LEADERS);
+    const dishes = useSelector((state) => state.dishes);
+    //useSelector hook from React Redux to access the cartItems array from the Redux store
+    const comments = useSelector((state) => state.comments);
+    const promotions = useSelector((state) => state.promotions);
+    const leaders = useSelector((state) => state.leaders);
+    //useSelector hook from React Redux to access the lastItemId from the Redux store
     const [selectedDish, setSelectedDish] = useState(null);
+    const dispatch = useDispatch();
 
-    const onDishSelect = (dishId) => {
+    function onDishSelect(dishId) {
         setSelectedDish(dishId);
     }
 
+
     const HomePage = () => {
+        console.log("image" + dishes[0].image);
         return (
+
             <Home
                 dish={dishes.filter((dish) => dish.featured)[0]}
-                promotion={promotions.filter((promo) => promo.featured)[0]}
-                leader={leaders.filter((leader) => leader.featured)[0]}
+                promotion={
+                    promotions.filter(
+                        (promo) => promo.featured
+                    )[0]
+                }
+                leader={
+                    leaders.filter(
+                        (leader) => leader.featured
+                    )[0]
+                }
             />
-        );
-    }
-    const DishWithId = ({ match }) => {
-        const selectedDish = dishes.filter((dish) => dish.id === parseInt(match.params.dishId, 10))[0];
-        const dishComments = comments.filter((comment) => comment.dishId === parseInt(match.params.dishId, 10));
 
-        return (
-            <DishDetail dish={selectedDish} comments={dishComments} />
         );
     };
-
+    const DishWithId = ({ match }) => {
+        return (
+            <DishDetail
+                dish={
+                    dishes.filter(
+                        (dish) =>
+                            dish.id === parseInt(match.params.dishId, 10)
+                    )[0]
+                }
+                comments={comments.filter(
+                    (comment) =>
+                        comment.dishId === parseInt(match.params.dishId, 10)
+                )}
+            />
+        );
+    };
 
     return (
         <div>
             <Header />
             <Switch>
-                <Route path='/home' component={HomePage} />
-                <Route exact path='/menu' component={() => <Menu dishes={dishes} />} />
-                <Route exact path='/contactus' component={Contact} />
-                <Route path='/menu/:dishId' component={DishWithId} />
-                <Route exact path='/aboutus' component={() => <About leaders={leaders} />} />
+                <Route path="/home" component={HomePage} />
+                <Route
+                    exact
+                    path="/menu"
+                    component={() => <Menu dishes={dishes} />}
+                />
+                <Route path="/menu/:dishId" component={DishWithId} />
+                <Route path="/contactus" component={Contact} />
+                <Route
+                    path="/aboutus"
+                    component={() => <About leaders={leaders} />}
+                />
                 <Redirect to="/home" />
             </Switch>
-            {/* <Menu dishes={dishes} onClick={(dishId) => onDishSelect(dishId)} /> */}
+
+            <DishDetail
+                dish={
+                    dishes.filter(
+                        (dish) => dish.id === selectedDish
+                    )[0]
+                }
+            ></DishDetail>
             <Footer />
         </div>
     );
 }
 
-export default Main;
+
+export default withRouter(connect(mapStateToProps)(Main));
