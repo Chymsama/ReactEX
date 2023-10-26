@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import { Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Label, Input, Col } from 'reactstrap';
+import { Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Label, Input, Col, Row, FormFeedback } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 function Contact(props) {
@@ -10,7 +10,14 @@ function Contact(props) {
         email: '',
         agree: false,
         contactType: 'Tel.',
-        message: ''
+        message: '',
+        touched: {
+            firstname: false,
+            lastname: false,
+            telnum: false,
+            email: false
+        }
+
     });
 
     const handleInputChange = (event) => {
@@ -30,6 +37,43 @@ function Contact(props) {
         event.preventDefault();
     }
 
+    const handleBlur = (field) => (evt) => {
+        setFormData((prevState) => ({
+            ...prevState,
+            touched: { ...prevState.touched, [field]: true }
+        })
+        );
+    }
+
+    const validate = (firstname, lastname, telnum, email) => {
+        const errors = {
+            firstname: '',
+            lastname: '',
+            telnum: '',
+            email: ''
+        };
+
+        if (formData.touched.firstname && firstname.length < 3)
+            errors.firstname = 'First Name should be >= 3 characters';
+        else if (formData.touched.firstname && firstname.length > 10)
+            errors.firstname = 'First Name should be <= 10 characters';
+
+        if (formData.touched.lastname && lastname.length < 3)
+            errors.lastname = 'Last Name should be >= 3 characters';
+        else if (formData.touched.lastname && lastname.length > 10)
+            errors.lastname = 'Last Name should be <= 10 characters';
+
+        const reg = /^\d+$/;
+        if (formData.touched.telnum && !reg.test(telnum))
+            errors.telnum = 'Tel. Number should contain only numbers';
+
+        if (formData.touched.email && email.split('').filter(x => x === '@').length !== 1)
+            errors.email = 'Email should contain a @';
+
+        return errors;
+    }
+
+    const errors = validate(formData.firstname, formData.lastname, formData.telnum, formData.email);
 
     return (
         <div className="container">
@@ -57,7 +101,11 @@ function Contact(props) {
                                 <Input type="text" id="firstname" name="firstname"
                                     placeholder="First Name"
                                     value={formData.firstname}
+                                    valid={errors.firstname === ''}
+                                    invalid={errors.firstname !== ''}
+                                    onBlur={handleBlur('firstname')}
                                     onChange={(event) => handleInputChange(event)} />
+                                <FormFeedback>{errors.firstname}</FormFeedback>
                             </Col>
                         </FormGroup>
                         <FormGroup row>
@@ -66,16 +114,24 @@ function Contact(props) {
                                 <Input type="text" id="lastname" name="lastname"
                                     placeholder="Last Name"
                                     value={formData.lastname}
+                                    valid={errors.lastname === ''}
+                                    invalid={errors.lastname !== ''}
+                                    onBlur={handleBlur('lastname')}
                                     onChange={(event) => handleInputChange(event)} />
+                                <FormFeedback>{errors.lastname}</FormFeedback>
                             </Col>
                         </FormGroup>
                         <FormGroup row>
                             <Label htmlFor="telnum" md={2}>Contact Tel.</Label>
                             <Col md={10}>
                                 <Input type="tel" id="telnum" name="telnum"
-                                    placeholder="Tel. number"
+                                    placeholder="Tel. Number"
                                     value={formData.telnum}
+                                    valid={errors.telnum === ''}
+                                    invalid={errors.telnum !== ''}
+                                    onBlur={handleBlur('telnum')}
                                     onChange={(event) => handleInputChange(event)} />
+                                <FormFeedback>{errors.telnum}</FormFeedback>
                             </Col>
                         </FormGroup>
                         <FormGroup row>
@@ -84,28 +140,11 @@ function Contact(props) {
                                 <Input type="email" id="email" name="email"
                                     placeholder="Email"
                                     value={formData.email}
+                                    valid={errors.email === ''}
+                                    invalid={errors.email !== ''}
+                                    onBlur={handleBlur('email')}
                                     onChange={(event) => handleInputChange(event)} />
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Col md={{ size: 6, offset: 2 }}>
-                                <FormGroup check>
-                                    <Label check>
-                                        <Input type="checkbox"
-                                            name="agree"
-                                            checked={formData.agree}
-                                            onChange={(event) => handleInputChange(event)} /> {' '}
-                                        <strong>May we contact you?</strong>
-                                    </Label>
-                                </FormGroup>
-                            </Col>
-                            <Col md={{ size: 3, offset: 1 }}>
-                                <Input type="select" name="contactType"
-                                    value={formData.contactType}
-                                    onChange={(event) => handleInputChange(event)}>
-                                    <option>Tel.</option>
-                                    <option>Email</option>
-                                </Input>
+                                <FormFeedback>{errors.email}</FormFeedback>
                             </Col>
                         </FormGroup>
                         <FormGroup row>
@@ -154,7 +193,6 @@ function Contact(props) {
                 </div>
 
             </div>
-
         </div>
     );
 }
