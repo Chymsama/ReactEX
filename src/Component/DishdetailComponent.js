@@ -34,7 +34,7 @@ function RenderComments(dishComments) {
     );
 }
 
-function DishDetail({ dish, comments }) {
+function DishDetail({ dish, addComment, comments }) {
     if (!dish) {
         return <div></div>;
     }
@@ -57,7 +57,11 @@ function DishDetail({ dish, comments }) {
                     <RenderDish dish={dish} />
                 </div>
                 <div className="col-12 col-md-5 m-1">
-                    <RenderComments comments={comments} />
+                    <RenderComments comments={comments}
+                        addComment={addComment}
+                        dishId={dish.id}
+                    />
+
                 </div>
             </div>
         </div>

@@ -15,7 +15,7 @@ import About from './AboutComponent';
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { useSelector, useDispatch } from 'react-redux';
-
+import { addComment } from '../redux/ActionCreators';
 
 const mapStateToProps = (state) => {
     return {
@@ -25,6 +25,11 @@ const mapStateToProps = (state) => {
         leaders: state.leaders,
     };
 };
+const mapDispatchToProps = dispatch => ({
+
+    addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment))
+
+});
 
 function Main() {
     const dishes = useSelector((state) => state.dishes);
@@ -74,6 +79,7 @@ function Main() {
                     (comment) =>
                         comment.dishId === parseInt(match.params.dishId, 10)
                 )}
+                addComment={addComment}
             />
         );
     };
@@ -110,4 +116,4 @@ function Main() {
 }
 
 
-export default withRouter(connect(mapStateToProps)(Main));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
