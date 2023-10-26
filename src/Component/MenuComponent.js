@@ -1,11 +1,24 @@
 import React, { Component } from 'react';
 import { Media } from 'reactstrap';
 import {
-    Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle
+    Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem
 } from 'reactstrap';
 import { useState } from 'react';
 import DishDetail from './DishdetailComponent';
+import { Link } from 'react-router-dom';
 
+function RenderMenuItem({ dish, onClick }) {
+    return (
+        <Card>
+            <Link to={`/menu/${dish.id}`} >
+                <CardImg width="100%" src={dish.image} alt={dish.name} />
+                <CardImgOverlay>
+                    <CardTitle>{dish.name}</CardTitle>
+                </CardImgOverlay>
+            </Link>
+        </Card>
+    );
+}
 
 
 function Menu({ dishes }) {
@@ -15,15 +28,6 @@ function Menu({ dishes }) {
     //     setSelectedDish(dish);
     // };
 
-    const renderDish = (dish) => {
-        if (dish != null) {
-            return (
-                <DishDetail dish={selectedDish} />
-            );
-        } else {
-            return <div></div>;
-        }
-    };
 
     const menu = dishes.map((dish) => (
         <div className="col-12 col-md-5 m-1" key={dish.id}>
@@ -38,12 +42,22 @@ function Menu({ dishes }) {
 
     return (
         <div className="container">
-            <div className="row">{menu}</div>
             <div className="row">
-                <div className="col-12 col-md-5 m-1">{renderDish(selectedDish)}</div>
+                <Breadcrumb>
+                    <BreadcrumbItem><Link to="/home">Home</Link></BreadcrumbItem>
+                    <BreadcrumbItem active>Menu</BreadcrumbItem>
+                </Breadcrumb>
+                <div className="col-12">
+                    <h3>Menu</h3>
+                    <hr />
+                </div>
+            </div>
+            <div className="row">
+                {menu}
             </div>
         </div>
     );
+
 }
 
 

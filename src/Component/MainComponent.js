@@ -11,10 +11,10 @@ import Contact from './ContactComponent';
 import { COMMENTS } from '../shared/comments';
 import { PROMOTIONS } from '../shared/promotions';
 import { LEADERS } from '../shared/leaders';
-
+import About from './AboutComponent';
 
 function Main() {
-    const [dishes, setDishes] = useState(DISHES);
+    const [dishes] = useState(DISHES);
     const [comments] = useState(COMMENTS);
     const [promotions] = useState(PROMOTIONS);
     const [leaders] = useState(LEADERS);
@@ -33,26 +33,28 @@ function Main() {
             />
         );
     }
+    const DishWithId = ({ match }) => {
+        const selectedDish = dishes.filter((dish) => dish.id === parseInt(match.params.dishId, 10))[0];
+        const dishComments = comments.filter((comment) => comment.dishId === parseInt(match.params.dishId, 10));
+
+        return (
+            <DishDetail dish={selectedDish} comments={dishComments} />
+        );
+    };
+
 
     return (
-
         <div>
             <Header />
-            {/* <Navbar dark color="primary">
-                <div className="container">
-                    <NavbarBrand href="/">Ristorante Con Fusion</NavbarBrand>
-                </div>
-            </Navbar> */}
             <Switch>
                 <Route path='/home' component={HomePage} />
                 <Route exact path='/menu' component={() => <Menu dishes={dishes} />} />
                 <Route exact path='/contactus' component={Contact} />
+                <Route path='/menu/:dishId' component={DishWithId} />
+                <Route exact path='/aboutus' component={() => <About leaders={leaders} />} />
                 <Redirect to="/home" />
             </Switch>
-            <Menu dishes={dishes} onClick={(dishId) => onDishSelect(dishId)} />
-            <DishDetail dish={dishes.filter((dish) => dish.id === selectedDish)[0]} />
-
-
+            {/* <Menu dishes={dishes} onClick={(dishId) => onDishSelect(dishId)} /> */}
             <Footer />
         </div>
     );
