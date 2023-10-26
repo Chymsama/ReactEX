@@ -1,28 +1,35 @@
 import React from 'react';
-import { Card, CardImg, CardText, CardBody, CardTitle, ListGroup, ListGroupItem, Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { Breadcrumb, BreadcrumbItem, Card, CardImg, CardText, CardBody, CardTitle, ListGroup, ListGroupItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import CommentForm from './CommentForm';
 
-
-const RenderDish = (dish) => {
+function RenderDish({ dish }) {
     if (dish != null) {
         return (
-            <DishDetail dish={dish} />
+            <div>
+                <Card>
+                    <CardImg top src={dish.image} alt={dish.name} />
+                    <CardBody>
+                        <CardTitle>{dish.name}</CardTitle>
+                        <CardText>{dish.description}</CardText>
+                    </CardBody>
+                </Card>
+            </div>
         );
     } else {
         return <div></div>;
     }
-};
+}
 
-function RenderComments(dishComments) {
-    if (dishComments === null) {
+function RenderComments({ comments }) {
+    if (comments === null) {
         return <div></div>;
     }
 
-    const commentList = dishComments.map((comment) => (
+    const commentList = comments.map((comment) => (
         <ListGroupItem key={comment.id}>
             <p>{comment.comment}</p>
-            <p>-- {comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}
-            </p>
+            <p>-- {comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}</p>
         </ListGroupItem>
     ));
 
@@ -34,7 +41,7 @@ function RenderComments(dishComments) {
     );
 }
 
-function DishDetail({ dish, addComment, comments }) {
+function DishDetail({ dish, comments, addComment }) {
     if (!dish) {
         return <div></div>;
     }
@@ -43,7 +50,6 @@ function DishDetail({ dish, addComment, comments }) {
         <div className="container">
             <div className="row">
                 <Breadcrumb>
-
                     <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
                     <BreadcrumbItem active>{dish.name}</BreadcrumbItem>
                 </Breadcrumb>
@@ -57,16 +63,14 @@ function DishDetail({ dish, addComment, comments }) {
                     <RenderDish dish={dish} />
                 </div>
                 <div className="col-12 col-md-5 m-1">
-                    <RenderComments comments={comments}
-                        addComment={addComment}
-                        dishId={dish.id}
-                    />
+                    <RenderComments comments={comments} />
+                    <CommentForm />
 
                 </div>
             </div>
+            
         </div>
     );
-
 }
 
 export default DishDetail;

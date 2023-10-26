@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Media } from 'reactstrap';
+import { Media, NavLink } from 'reactstrap';
 import {
     Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem
 } from 'reactstrap';
@@ -31,12 +31,14 @@ function Menu({ dishes }) {
 
     const menu = dishes.map((dish) => (
         <div className="col-12 col-md-5 m-1" key={dish.id}>
-            <Card>
-                <CardImg width="100%" src={dish.image} alt={dish.name} />
-                <CardImgOverlay>
-                    <CardTitle>{dish.name}</CardTitle>
-                </CardImgOverlay>
-            </Card>
+            <NavLink href={`/menu/${dish.id}`}>
+                <Card>
+                    <CardImg width="100%" src={dish.image} alt={dish.name} />
+                    <CardImgOverlay>
+                        <CardTitle>{dish.name}</CardTitle>
+                    </CardImgOverlay>
+                </Card>
+            </NavLink>
         </div>
     ));
 
