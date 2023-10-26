@@ -16,6 +16,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { useSelector, useDispatch } from 'react-redux';
 import { addComment } from '../redux/ActionCreators';
+import { fetchDishes } from '../redux/ActionCreators';
 
 const mapStateToProps = (state) => {
     return {
@@ -27,8 +28,9 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = dispatch => ({
 
-    addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment))
+    addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
 
+    fetchDishes: () => { dispatch(fetchDishes()) }
 });
 
 function Main() {
@@ -41,17 +43,17 @@ function Main() {
     const [selectedDish, setSelectedDish] = useState(null);
     const dispatch = useDispatch();
 
+
     function onDishSelect(dishId) {
         setSelectedDish(dishId);
     }
 
 
     const HomePage = () => {
-        console.log("image" + dishes[0].image);
         return (
-
+            dishes && promotions && leaders &&
             <Home
-                dish={dishes.filter((dish) => dish.featured)[0]}
+                dish={dishes.dishes.filter((dish) => dish.featured)[0]}
                 promotion={
                     promotions.filter(
                         (promo) => promo.featured
@@ -62,15 +64,20 @@ function Main() {
                         (leader) => leader.featured
                     )[0]
                 }
+                dishesLoading={dishes.isLoading}
+                dishesErrMess={dishes.errMess}
+
             />
 
         );
     };
     const DishWithId = ({ match }) => {
         return (
+            dishes && promotions &&
+
             <DishDetail
                 dish={
-                    dishes.filter(
+                    dishes.dishes.filter(
                         (dish) =>
                             dish.id === parseInt(match.params.dishId, 10)
                     )[0]
@@ -80,6 +87,9 @@ function Main() {
                         comment.dishId === parseInt(match.params.dishId, 10)
                 )}
                 addComment={addComment}
+                isLoading={dishes.isLoading}
+                errMess={dishes.errMess}
+
             />
         );
     };
@@ -103,13 +113,13 @@ function Main() {
                 <Redirect to="/home" />
             </Switch>
 
-            <DishDetail
+            {dishes && <DishDetail
                 dish={
-                    dishes.filter(
+                    dishes.dishes.filter(
                         (dish) => dish.id === selectedDish
                     )[0]
                 }
-            ></DishDetail>
+            ></DishDetail>}
             <Footer />
         </div>
     );

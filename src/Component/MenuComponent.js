@@ -22,13 +22,6 @@ function RenderMenuItem({ dish, onClick }) {
 
 
 function Menu({ dishes }) {
-    const [selectedDish, setSelectedDish] = useState(null);
-
-    // const onDishSelect = (dish) => {
-    //     setSelectedDish(dish);
-    // };
-
-
     const menu = dishes.map((dish) => (
         <div className="col-12 col-md-5 m-1" key={dish.id}>
             <NavLink href={`/menu/${dish.id}`}>
