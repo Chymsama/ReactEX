@@ -1,8 +1,36 @@
-import React from 'react';
-import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import React, { Component, useState } from 'react';
+import { Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Label, Input, Col } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 function Contact(props) {
+    const [formData, setFormData] = useState({
+        firstname: '',
+        lastname: '',
+        telnum: '',
+        email: '',
+        agree: false,
+        contactType: 'Tel.',
+        message: ''
+    });
+
+    const handleInputChange = (event) => {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        setFormData({
+            ...formData,
+            [name]: value
+        });
+    };
+
+    const handleSubmit = (event) => {
+        console.log('Current State is: ' + JSON.stringify(formData));
+        alert('Current State is: ' + JSON.stringify(formData));
+        event.preventDefault();
+    }
+
+
     return (
         <div className="container">
             <div className="row">
@@ -13,6 +41,90 @@ function Contact(props) {
                 <div className="col-12">
                     <h3>Contact Us</h3>
                     <hr />
+                </div>
+            </div>
+
+
+            <div className="row row-content">
+                <div className="col-12">
+                    <h3>Send us your Feedback</h3>
+                </div>
+                <div className="col-12 col-md-9">
+                    <Form onSubmit={(event) => handleSubmit(event)}>
+                        <FormGroup row>
+                            <Label htmlFor="firstname" md={2}>First Name</Label>
+                            <Col md={10}>
+                                <Input type="text" id="firstname" name="firstname"
+                                    placeholder="First Name"
+                                    value={formData.firstname}
+                                    onChange={(event) => handleInputChange(event)} />
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Label htmlFor="lastname" md={2}>Last Name</Label>
+                            <Col md={10}>
+                                <Input type="text" id="lastname" name="lastname"
+                                    placeholder="Last Name"
+                                    value={formData.lastname}
+                                    onChange={(event) => handleInputChange(event)} />
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Label htmlFor="telnum" md={2}>Contact Tel.</Label>
+                            <Col md={10}>
+                                <Input type="tel" id="telnum" name="telnum"
+                                    placeholder="Tel. number"
+                                    value={formData.telnum}
+                                    onChange={(event) => handleInputChange(event)} />
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Label htmlFor="email" md={2}>Email</Label>
+                            <Col md={10}>
+                                <Input type="email" id="email" name="email"
+                                    placeholder="Email"
+                                    value={formData.email}
+                                    onChange={(event) => handleInputChange(event)} />
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Col md={{ size: 6, offset: 2 }}>
+                                <FormGroup check>
+                                    <Label check>
+                                        <Input type="checkbox"
+                                            name="agree"
+                                            checked={formData.agree}
+                                            onChange={(event) => handleInputChange(event)} /> {' '}
+                                        <strong>May we contact you?</strong>
+                                    </Label>
+                                </FormGroup>
+                            </Col>
+                            <Col md={{ size: 3, offset: 1 }}>
+                                <Input type="select" name="contactType"
+                                    value={formData.contactType}
+                                    onChange={(event) => handleInputChange(event)}>
+                                    <option>Tel.</option>
+                                    <option>Email</option>
+                                </Input>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Label htmlFor="message" md={2}>Your Feedback</Label>
+                            <Col md={10}>
+                                <Input type="textarea" id="message" name="message"
+                                    rows="12"
+                                    value={formData.message}
+                                    onChange={(event) => handleInputChange(event)}></Input>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Col md={{ size: 10, offset: 2 }}>
+                                <Button type="submit" color="primary">
+                                    Send Feedback
+                                </Button>
+                            </Col>
+                        </FormGroup>
+                    </Form>
                 </div>
             </div>
             <div className="row row-content">
@@ -42,7 +154,6 @@ function Contact(props) {
                 </div>
 
             </div>
-            
 
         </div>
     );
