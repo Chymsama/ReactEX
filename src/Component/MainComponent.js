@@ -103,7 +103,7 @@ function Main() {
                 <Route
                     exact
                     path="/menu"
-                    component={() => <Menu dishes={dishes} />}
+                    component={() => <Menu dishes={dishes.dishes} />}
                 />
                 <Route path="/menu/:dishId" component={DishWithId} />
                 <Route
