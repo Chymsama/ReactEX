@@ -1,7 +1,13 @@
 import { COMMENTS } from '../shared/comments';
 import * as ActionTypes from './ActionTypes';
 
-export const Comments = (state = COMMENTS, action) => {
+let feedback = [];
+
+fetch("http://localhost:3000/feedback")
+    .then(res => res.json())
+    .then(res => feedback = res)
+
+export const Comments = (state = feedback, action) => {
     switch (action.type) {
         case ActionTypes.ADD_COMMENT:
             var comment = action.payload;
@@ -14,3 +20,4 @@ export const Comments = (state = COMMENTS, action) => {
             return state;
     }
 };
+

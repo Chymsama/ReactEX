@@ -35,7 +35,7 @@ function Header(props) {
             <Navbar dark expand="md">
                 <div className="container">
                     <NavbarToggler onClick={toggleNav} />
-                    <NavbarBrand className="mr-auto" href="/"><img src='assets/images/logo.png' height="30" width="41" alt='Ristorante Con Fusion' /></NavbarBrand>
+                    <NavbarBrand className="mr-auto" href="/"><img src='./assets/images/logo.png' height="30" width="41" alt='Ristorante Con Fusion' /></NavbarBrand>
                     <Collapse isOpen={isNavOpen} navbar>
                         <Nav navbar>
                             <NavItem>

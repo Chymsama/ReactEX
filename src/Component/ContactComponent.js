@@ -3,7 +3,7 @@ import {
     Breadcrumb, BreadcrumbItem,
     Button, Row, Col, Label
 } from 'reactstrap';
-import { Control, LocalForm, Errors,actions } from 'react-redux-form';
+import { Control, LocalForm, Errors, actions } from 'react-redux-form';
 
 import { Link } from 'react-router-dom';
 
@@ -39,6 +39,7 @@ function Contact(props) {
     const handleSubmit = (values) => {
         console.log('Current State is: ' + JSON.stringify(values));
         alert('Current State is: ' + JSON.stringify(values));
+        props.postFeedback(values)
         props.resetFeedbackForm()
         // event.preventDefault();
     }

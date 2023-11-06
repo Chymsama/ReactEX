@@ -10,7 +10,7 @@ import About from './AboutComponent';
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { useSelector, useDispatch } from 'react-redux';
-import { addComment } from '../redux/ActionCreators';
+import { addComment, fetchLeaders, postFeedback } from '../redux/ActionCreators';
 import { fetchDishes } from '../redux/ActionCreators';
 import { actions } from 'react-redux-form';
 
@@ -29,6 +29,8 @@ const mapDispatchToProps = dispatch => ({
 
     fetchDishes: () => { dispatch(fetchDishes()) },
 
+    fetchLeaders: () => { dispatch(fetchLeaders()) },
+
     // resetFeedbackForm: () => { dispatch(actions.reset('feedback')) }
 });
 
@@ -38,13 +40,16 @@ function Main() {
     const comments = useSelector((state) => state.comments);
     const promotions = useSelector((state) => state.promotions);
     const leaders = useSelector((state) => state.leaders);
+
+    console.log(leaders)
     //useSelector hook from React Redux to access the lastItemId from the Redux store
     const [selectedDish, setSelectedDish] = useState(null);
     const dispatch = useDispatch();
 
 
     const resetFeedbackForm = () => { dispatch(actions.reset('feedback')) }
-    
+    const postCurrentFeedback = (feedback) => { dispatch(postFeedback(feedback)) }
+
     function onDishSelect(dishId) {
         setSelectedDish(dishId);
     }
@@ -61,12 +66,12 @@ function Main() {
                     )[0]
                 }
                 leader={
-                    leaders.filter(
+                    leaders.leaders.filter(
                         (leader) => leader.featured
                     )[0]
                 }
-                dishesLoading={dishes.isLoading}
-                dishesErrMess={dishes.errMess}
+                dishesLoading={dishes.isLoading || leaders.isLoading}
+                dishesErrMess={dishes.errMess || leaders.errMess}
 
             />
 
@@ -108,9 +113,9 @@ function Main() {
                 <Route path="/menu/:dishId" component={DishWithId} />
                 <Route
                     path="/aboutus"
-                    component={() => <About leaders={leaders} />}
+                    component={() => <About leaders={leaders.leaders} />}
                 />
-                <Route exact path='/contactus' component={() => <Contact resetFeedbackForm={resetFeedbackForm} />} />
+                <Route exact path='/contactus' component={() => <Contact resetFeedbackForm={resetFeedbackForm} postFeedback={postCurrentFeedback} />} />
                 <Redirect to="/home" />
             </Switch>
 
